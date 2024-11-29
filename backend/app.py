@@ -1,26 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-team_a_score = 0
-team_b_score = 0
+# A simple endpoint for recording clicks
+@app.route('/api/click', methods=['POST'])
+def handle_click():
+    return jsonify({"message": "Click recorded!"})
 
-@app.route("/score", methods=["GET"])
-def get_scores():
-    return jsonify({"team_a": team_a_score, "team_b": team_b_score})
-
-@app.route("/increment/<team>", methods=["POST"])
-def increment_score(team):
-    global team_a_score, team_b_score
-
-    if team == "team_a":
-        team_a_score += 1
-    elif team == "team_b":
-        team_b_score += 1
-    else:
-        return jsonify({"error": "Invalid team"}), 400
-
-    return jsonify({"message": f"{team} score incremented!"})
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
