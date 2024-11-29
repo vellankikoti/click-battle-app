@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [teamAScore, setTeamAScore] = useState(0);
-  const [teamBScore, setTeamBScore] = useState(0);
+  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    fetch("http://localhost:5000/score")
-      .then((res) => res.json())
-      .then((data) => {
-        setTeamAScore(data.team_a);
-        setTeamBScore(data.team_b);
-      });
-  }, []);
-
-  const incrementScore = (team) => {
-    fetch(`http://localhost:5000/increment/${team}`, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        if (team === "team_a") setTeamAScore(teamAScore + 1);
-        if (team === "team_b") setTeamBScore(teamBScore + 1);
-      });
+  const handleClick = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/click');
+      setMessage(response.data.message);
+    } catch (error) {
+      console.error('Error making API request', error);
+    }
   };
 
   return (
-    <div className="App">
-      <h1>Click Battle</h1>
-      <div>
-        <h2>Team A: {teamAScore}</h2>
-        <button onClick={() => incrementScore("team_a")}>Click for Team A</button>
-      </div>
-      <div>
-        <h2>Team B: {teamBScore}</h2>
-        <button onClick={() => incrementScore("team_b")}>Click for Team B</button>
-      </div>
+    <div>
+      <h1>Click Battle App</h1>
+      <button onClick={handleClick}>Click Me!</button>
+      <p>{message}</p>
     </div>
   );
 }
